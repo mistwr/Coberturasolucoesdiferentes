@@ -3,699 +3,330 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>Cobertura de Rede — Soluções Diferentes</title>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<title>Cobertura — Soluções Diferentes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --blue:#1a56db;--blue2:#1e40af;--green:#10b981;--green2:#059669;
-  --amber:#f59e0b;--red:#ef4444;--purple:#8b5cf6;
-  --bg:#050810;--s1:#0d1117;--s2:#161b27;--s3:#1e2535;
-  --bd:#2a3550;--bd2:#374263;
-  --tx:#e8edf8;--tm:#8899bb;--ts:#4a5680;
-  --font:'IBM Plex Sans',sans-serif;--mono:'IBM Plex Mono',monospace
-}
-html,body{height:100%;background:var(--bg);color:var(--tx);font-family:var(--font);overflow:hidden}
-#app{display:flex;flex-direction:column;height:100vh}
-
-/* ── TOPBAR ──────────────────────────────────────────────────── */
-#top{
-  display:flex;align-items:center;gap:0;height:48px;flex-shrink:0;
-  background:var(--s1);border-bottom:1px solid var(--bd);
-  position:relative;z-index:200
-}
-.t-brand{display:flex;align-items:center;gap:9px;padding:0 14px;text-decoration:none;border-right:1px solid var(--bd);height:100%}
-.t-icon{width:28px;height:28px;background:var(--blue);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
-.t-name{font-size:13px;font-weight:800;color:var(--tx);letter-spacing:-.3px;line-height:1.1}
-.t-name em{color:#60a5fa;font-style:normal}
-.t-sub{font-size:8px;color:var(--ts);text-transform:uppercase;letter-spacing:.8px;margin-top:1px}
-.t-mid{padding:0 14px;border-right:1px solid var(--bd);height:100%;display:flex;align-items:center}
-.t-label{font-size:11px;font-weight:600;color:var(--tm);display:flex;align-items:center;gap:6px}
-.t-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 6px var(--green);animation:pulse-dot 2s infinite}
-@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:.4}}
-.t-right{margin-left:auto;display:flex;align-items:center;gap:0;height:100%}
-.t-src{padding:0 12px;border-left:1px solid var(--bd);height:100%;display:flex;align-items:center;gap:5px;font-size:10px;color:var(--ts);font-family:var(--mono)}
-.t-src span{color:var(--green);font-weight:600}
-.t-powered{display:flex;align-items:center;gap:6px;padding:0 14px;border-left:1px solid var(--bd);height:100%;text-decoration:none}
-.t-mp{width:22px;height:22px;background:var(--green);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:white}
-.t-pt{font-size:9px;color:var(--tm);line-height:1.2;font-family:var(--mono)}
-.t-pt b{color:var(--green);font-size:10px}
-
-/* ── SEARCH ──────────────────────────────────────────────────── */
-#srch{
-  display:flex;align-items:center;gap:8px;padding:8px 12px;
-  background:var(--s1);border-bottom:1px solid var(--bd);
-  flex-shrink:0;position:relative;z-index:150
-}
-#inp{
-  flex:1;height:38px;background:var(--s2);border:1px solid var(--bd);
-  border-radius:7px;padding:0 13px;color:var(--tx);font-family:var(--font);
-  font-size:13px;outline:none;transition:border-color .2s
-}
-#inp:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(26,86,219,.15)}
-#inp::placeholder{color:var(--ts)}
-.s-btn{height:38px;padding:0 14px;border:none;border-radius:7px;font-family:var(--font);font-size:12px;font-weight:700;cursor:pointer;transition:opacity .15s;display:flex;align-items:center;gap:6px;white-space:nowrap}
-.s-btn:hover{opacity:.85}
-.s-go{background:var(--blue);color:white}
-.s-gps{background:var(--s2);border:1px solid var(--bd)!important;color:var(--tm);width:38px;padding:0;justify-content:center;font-size:16px}
-#sugg{position:absolute;top:54px;left:12px;right:12px;background:var(--s2);border:1px solid var(--bd);border-radius:8px;z-index:999;overflow:hidden;display:none;box-shadow:0 12px 40px rgba(0,0,0,.6)}
-.sg{padding:9px 13px;cursor:pointer;font-size:12px;border-bottom:1px solid var(--bd)}
-.sg:last-child{border-bottom:none}
-.sg:hover{background:var(--s3)}
-.sg-m{color:var(--tx);font-weight:600}
-.sg-s{font-size:10px;color:var(--tm);margin-top:1px}
-
-/* ── MAIN LAYOUT ─────────────────────────────────────────────── */
+body{font-family:'Inter',sans-serif;background:#0a0e1a;color:#e8edf8;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+#top{display:flex;align-items:center;gap:10px;padding:0 14px;height:50px;flex-shrink:0;background:linear-gradient(90deg,#1a56db,#1e40af);border-bottom:2px solid rgba(0,0,0,.4)}
+.brand{display:flex;align-items:center;gap:8px;text-decoration:none}
+.bi{width:28px;height:28px;background:white;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.bn{font-size:13px;font-weight:800;color:white;line-height:1.1}.bn span{color:#93c5fd}
+.bs{font-size:8px;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:1px}
+.sep{width:1px;height:26px;background:rgba(255,255,255,.2)}
+.ttl{font-size:12px;font-weight:600;color:rgba(255,255,255,.85)}
+.pw{margin-left:auto;display:flex;align-items:center;gap:5px;background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.15);border-radius:20px;padding:3px 10px 3px 4px;text-decoration:none}
+.pd{width:20px;height:20px;background:#10b981;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:900;color:white}
+.pt{font-size:9px;color:rgba(255,255,255,.8);line-height:1.2}.pt b{color:#10b981;font-size:10px}
+#srch{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#0d1117;border-bottom:1px solid #2a3550;flex-shrink:0;position:relative}
+#inp{flex:1;height:38px;background:#161b27;border:1px solid #2a3550;border-radius:7px;padding:0 12px;color:#e8edf8;font-family:'Inter',sans-serif;font-size:13px;outline:none}
+#inp:focus{border-color:#1a56db}
+#inp::placeholder{color:#4a5680}
+#gps{height:38px;width:38px;background:#161b27;border:1px solid #2a3550;border-radius:7px;cursor:pointer;font-size:16px}
+#go{height:38px;padding:0 16px;background:#1a56db;border:none;border-radius:7px;color:white;font-weight:700;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;white-space:nowrap}
+#sugg{position:absolute;top:54px;left:12px;right:12px;background:#161b27;border:1px solid #2a3550;border-radius:8px;z-index:999;display:none;box-shadow:0 8px 24px rgba(0,0,0,.5);overflow:hidden}
+.si{padding:10px 13px;cursor:pointer;border-bottom:1px solid #2a3550;font-size:13px}.si:last-child{border-bottom:none}.si:hover{background:#1e2535}
+.si b{display:block;color:#e8edf8;font-weight:600}.si small{color:#8899bb;font-size:11px}
 #main{flex:1;display:flex;overflow:hidden}
-
-/* ── MAP ─────────────────────────────────────────────────────── */
-#map-wrap{flex:1;position:relative}
-#map{width:100%;height:100%;z-index:1}
-
-/* Leaflet overrides */
-.leaflet-popup-content-wrapper{background:var(--s2)!important;border:1px solid var(--bd2)!important;color:var(--tx)!important;border-radius:10px!important;box-shadow:0 8px 32px rgba(0,0,0,.6)!important}
-.leaflet-popup-tip{background:var(--s2)!important}
+#map{flex:1}
+.leaflet-popup-content-wrapper{background:#161b27!important;border:1px solid #374263!important;color:#e8edf8!important;border-radius:10px!important}
+.leaflet-popup-tip{background:#161b27!important}
 .leaflet-popup-content{margin:0!important}
-.leaflet-bar a{background:var(--s2)!important;color:var(--tx)!important;border:1px solid var(--bd)!important}
-.leaflet-bar a:hover{background:var(--s3)!important}
-
-/* Map status badge */
-#map-status{
-  position:absolute;top:10px;left:50%;transform:translateX(-50%);
-  background:var(--s1);border:1px solid var(--bd);border-radius:20px;
-  padding:5px 14px;font-size:11px;font-family:var(--mono);color:var(--tm);
-  z-index:10;white-space:nowrap;display:none;
-  box-shadow:0 4px 16px rgba(0,0,0,.4)
-}
-
-/* ── RESULTS PANEL ───────────────────────────────────────────── */
-#panel{
-  width:320px;background:var(--s1);border-left:1px solid var(--bd);
-  display:flex;flex-direction:column;overflow:hidden;flex-shrink:0;
-  transition:transform .3s;
-}
-@media(max-width:700px){
-  #main{position:relative}
-  #panel{position:absolute;bottom:0;left:0;right:0;width:100%;height:65%;border-left:none;border-top:1px solid var(--bd);transform:translateY(100%);border-radius:14px 14px 0 0;z-index:100}
-  #panel.open{transform:translateY(0)}
-  #panel-handle{display:flex}
-}
-#panel-handle{display:none;justify-content:center;padding:10px 0;cursor:pointer;flex-shrink:0}
-.handle-bar{width:36px;height:4px;background:var(--bd2);border-radius:2px}
-
-/* Empty state */
-#empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center}
-.e-icon{font-size:36px;opacity:.5}
-.e-title{font-size:14px;font-weight:700;color:var(--tm)}
-.e-sub{font-size:11px;color:var(--ts);line-height:1.6;max-width:220px}
-
-/* Loading */
-#pld{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px}
-.pring{width:32px;height:32px;border:2px solid var(--bd);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite}
+.leaflet-bar a{background:#161b27!important;color:#e8edf8!important;border:1px solid #2a3550!important}
+#panel{width:310px;background:#0d1117;border-left:1px solid #2a3550;display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+#empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px;text-align:center}
+.ei{font-size:40px;opacity:.5}.et{font-size:15px;font-weight:700;color:#8899bb}.es{font-size:12px;color:#4a5680;line-height:1.7;max-width:200px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:6px}
+.ch{padding:5px 12px;border:1px solid #2a3550;border-radius:20px;font-size:11px;color:#8899bb;cursor:pointer;background:none;font-family:'Inter',sans-serif}
+.ch:hover{border-color:#1a56db;color:#93c5fd}
+#ld{flex:1;display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px}
+.ring{width:36px;height:36px;border:3px solid #2a3550;border-top-color:#1a56db;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
-.ptxt{font-size:11px;color:var(--tm);font-family:var(--mono);text-align:center}
-
-/* Results */
-#results{flex:1;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--bd) transparent;display:none}
-.r-loc{padding:12px 14px;border-bottom:1px solid var(--bd);background:var(--s2)}
-.r-addr{font-size:12px;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.r-coord{font-size:10px;color:var(--ts);font-family:var(--mono);margin-top:2px}
-.r-src{font-size:9px;color:var(--green);margin-top:2px;font-family:var(--mono)}
-
-/* Section headers */
-.sec{padding:8px 14px 4px;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--ts);font-family:var(--mono);display:flex;align-items:center;gap:8px}
-.sec-line{flex:1;height:1px;background:var(--bd)}
-.sec-count{background:var(--bd);color:var(--tm);padding:1px 6px;border-radius:10px;font-size:9px}
-
-/* Operator card */
-.op{margin:0 10px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:9px;overflow:hidden;cursor:pointer;transition:border-color .2s}
-.op:hover,.op.open{border-color:var(--bd2)}
-.op.cov{border-left:3px solid var(--green)}
-.op-hd{display:flex;align-items:center;gap:10px;padding:10px 12px}
-.op-logo{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;font-family:var(--mono)}
-.logo-meo{background:#00b0e015;color:#00c8ff;border:1px solid #00b0e030}
-.logo-nos{background:#ff040415;color:#ff6080;border:1px solid #ff040430}
-.logo-voda{background:#e6000015;color:#ff6060;border:1px solid #e6000030}
-.logo-digi{background:#ff881015;color:#ffaa60;border:1px solid #ff881030}
-.logo-sat{background:#8b5cf615;color:#a78bfa;border:1px solid #8b5cf630}
-.logo-other{background:var(--s3);color:var(--tm);border:1px solid var(--bd)}
-.op-info{flex:1;min-width:0}
-.op-name{font-size:13px;font-weight:700;color:var(--tx)}
-.op-tags{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
-.tag{padding:1px 7px;border-radius:3px;font-size:9px;font-weight:700;font-family:var(--mono);text-transform:uppercase}
-.tag-ftth{background:#10b98115;color:var(--green);border:1px solid #10b98130}
-.tag-hfc{background:#3b82f615;color:#60a5fa;border:1px solid #3b82f630}
-.tag-adsl{background:#f59e0b15;color:var(--amber);border:1px solid #f59e0b30}
-.tag-5g{background:#8b5cf615;color:#a78bfa;border:1px solid #8b5cf630}
-.tag-4g{background:#3b82f615;color:#60a5fa;border:1px solid #3b82f630}
-.tag-3g{background:#6b728015;color:#9ca3af;border:1px solid #6b728030}
-.tag-sat{background:#8b5cf615;color:#a78bfa;border:1px solid #8b5cf630}
-.op-speed{font-size:13px;font-weight:700;color:var(--tx);font-family:var(--mono)}
-.op-body{display:none;padding:0 12px 10px;border-top:1px solid var(--bd)}
-.op.open .op-body{display:block}
-.sp-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
-.sp-cell{background:var(--s1);border:1px solid var(--bd);border-radius:6px;padding:8px 10px}
-.sp-val{font-size:18px;font-weight:800;color:var(--tx);font-family:var(--mono);line-height:1}
-.sp-unit{font-size:10px;color:var(--tm);font-weight:400}
-.sp-lbl{font-size:9px;color:var(--ts);text-transform:uppercase;letter-spacing:.8px;margin-top:3px}
-.sp-bar{height:4px;background:var(--bd);border-radius:2px;margin-top:6px;overflow:hidden}
-.sp-fill{height:100%;border-radius:2px;transition:width .6s ease}
-.fill-dl{background:linear-gradient(90deg,var(--green),#34d399)}
-.fill-ul{background:linear-gradient(90deg,var(--blue),#60a5fa)}
-.mob-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;margin-top:8px}
-.mob-cell{background:var(--s1);border:1px solid var(--bd);border-radius:5px;padding:5px 4px;text-align:center}
-.mob-tech{font-size:10px;font-weight:700;font-family:var(--mono);margin-bottom:2px}
-.mob-val{font-size:9px;color:var(--tm)}
-.mob-avail{font-size:9px;font-weight:600}
-.av-y{color:var(--green)}.av-n{color:var(--ts)}
-.op-actions{display:flex;gap:5px;margin-top:8px}
-.op-act{flex:1;padding:6px;border-radius:5px;border:1px solid var(--bd);background:none;color:var(--tm);font-size:10px;cursor:pointer;font-family:var(--mono);font-weight:600;transition:all .15s;text-decoration:none;text-align:center}
-.op-act:hover{border-color:var(--blue);color:var(--blue)}
-
-/* Score */
-.score-box{margin:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:9px;padding:12px}
-.score-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
-.score-num{font-size:36px;font-weight:800;font-family:var(--mono);line-height:1}
-.score-bar-wrap{flex:1}
-.score-lbl{font-size:10px;color:var(--tm);margin-bottom:4px}
-.score-bar{height:6px;background:var(--bd);border-radius:3px;overflow:hidden}
-.score-fill{height:100%;border-radius:3px;transition:width .8s ease}
-
-/* No data */
-.nodata{padding:16px 14px;font-size:11px;color:var(--tm);line-height:1.6;text-align:center}
-.nodata a{color:var(--blue);text-decoration:none}
-
-/* Bottom tabs (mobile) */
-#tabs{display:none;border-top:1px solid var(--bd);flex-shrink:0}
-.tab{flex:1;padding:8px;background:none;border:none;color:var(--ts);font-family:var(--mono);font-size:9px;font-weight:600;cursor:pointer;text-transform:uppercase;letter-spacing:.5px;border-top:2px solid transparent;transition:all .15s}
-.tab.act{color:var(--blue);border-top-color:var(--blue)}
-@media(max-width:700px){#tabs{display:flex}}
+.lt{font-size:13px;color:#8899bb;text-align:center;line-height:1.5}
+#res{flex:1;overflow-y:auto;display:none;scrollbar-width:thin;scrollbar-color:#2a3550 transparent}
+.rh{padding:12px 14px;background:#161b27;border-bottom:1px solid #2a3550}
+.ra{font-size:12px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc{font-size:10px;color:#4a5680;margin-top:3px;font-family:monospace}
+.rs{font-size:10px;margin-top:3px}
+.sc{margin:10px;background:#161b27;border:1px solid #2a3550;border-radius:9px;padding:12px}
+.sr{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.sn{font-size:38px;font-weight:800;line-height:1}
+.sw{flex:1}.sl{font-size:11px;margin-bottom:5px;font-weight:600}
+.sb{height:6px;background:#2a3550;border-radius:3px;overflow:hidden}.sf{height:100%;border-radius:3px;transition:width .8s ease}
+.st{display:flex;gap:6px;font-size:10px;color:#8899bb;flex-wrap:wrap}
+.sh{padding:10px 14px 4px;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:#4a5680;display:flex;align-items:center;gap:8px}
+.shl{flex:1;height:1px;background:#2a3550}.shn{background:#2a3550;color:#8899bb;padding:1px 6px;border-radius:10px;font-size:9px}
+.op{margin:0 10px 8px;background:#161b27;border:1px solid #2a3550;border-radius:9px;overflow:hidden;cursor:pointer}
+.op.has{border-left:3px solid #10b981}
+.oh{display:flex;align-items:center;gap:10px;padding:10px 12px}
+.ol{width:34px;height:34px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:900;flex-shrink:0}
+.oi{flex:1;min-width:0}.on{font-size:13px;font-weight:700}
+.ot{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px}
+.tag{padding:1px 7px;border-radius:3px;font-size:9px;font-weight:700;text-transform:uppercase}
+.tf{background:#10b98115;color:#10b981;border:1px solid #10b98130}
+.th{background:#3b82f615;color:#60a5fa;border:1px solid #3b82f630}
+.ta{background:#f59e0b15;color:#f59e0b;border:1px solid #f59e0b30}
+.t5{background:#8b5cf615;color:#a78bfa;border:1px solid #8b5cf630}
+.t4{background:#3b82f615;color:#60a5fa;border:1px solid #3b82f630}
+.t3{background:#6b728015;color:#9ca3af;border:1px solid #6b728030}
+.osp{font-size:14px;font-weight:800;font-family:monospace}
+.ob{display:none;padding:0 12px 12px;border-top:1px solid #2a3550}
+.op.open .ob{display:block}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:8px}
+.sc2{background:#0d1117;border:1px solid #2a3550;border-radius:6px;padding:8px 10px}
+.sv{font-size:20px;font-weight:800;font-family:monospace;line-height:1}.su{font-size:10px;color:#8899bb;font-weight:400}
+.sl2{font-size:9px;color:#4a5680;text-transform:uppercase;margin-top:3px}
+.sb2{height:4px;background:#2a3550;border-radius:2px;margin-top:5px;overflow:hidden}
+.sf2{height:100%;border-radius:2px}
+.mg{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:8px}
+.mc{background:#0d1117;border:1px solid #2a3550;border-radius:6px;padding:7px;text-align:center}
+.mt{font-size:11px;font-weight:700;font-family:monospace;margin-bottom:3px}
+.mv{font-size:10px;color:#8899bb}.ma{font-size:10px;font-weight:600;margin-top:2px}
+.ay{color:#10b981}.an{color:#4a5680}
+.lnk{display:block;margin-top:8px;padding:7px;border:1px solid #2a3550;border-radius:6px;text-align:center;color:#8899bb;font-size:11px;font-weight:600;text-decoration:none}
+.lnk:hover{border-color:#1a56db;color:#93c5fd}
+.nd{padding:16px;font-size:12px;color:#8899bb;text-align:center;line-height:1.7}
+.nd a{color:#60a5fa}
+.ep{height:20px}
+@media(max-width:680px){
+  #panel{position:absolute;bottom:0;left:0;right:0;width:100%;max-height:65%;border-left:none;border-top:1px solid #2a3550;border-radius:14px 14px 0 0;transform:translateY(100%);transition:transform .3s;z-index:500}
+  #panel.up{transform:translateY(0)}
+  #main{position:relative}
+  #hnd{display:flex!important}
+}
+#hnd{display:none;justify-content:center;padding:10px 0;flex-shrink:0;cursor:pointer}
+.hb{width:36px;height:4px;background:#374263;border-radius:2px}
+@media(max-width:500px){.sep,.ttl{display:none}}
 </style>
 </head>
 <body>
-<div id="app">
-
-  <!-- TOPBAR -->
-  <div id="top">
-    <a class="t-brand" href="https://solucoesdiferentes.vercel.app" target="_blank">
-      <div class="t-icon">💡</div>
-      <div>
-        <div class="t-name">Soluções<em>Diferentes</em></div>
-        <div class="t-sub">Energia · Telecom · Seguros</div>
-      </div>
-    </a>
-    <div class="t-mid">
-      <div class="t-label">
-        <div class="t-dot"></div>
-        Cobertura de Rede
-      </div>
-    </div>
-    <div class="t-right">
-      <div class="t-src"><span id="src-label">GEO.ANACOM</span> · Q4 2025</div>
-      <a class="t-powered" href="https://mypoupar.pt" target="_blank">
-        <div class="t-mp">M</div>
-        <div class="t-pt">powered by<br><b>MyPoupar</b></div>
-      </a>
-    </div>
-  </div>
-
-  <!-- SEARCH -->
-  <div id="srch">
-    <input id="inp" type="text" placeholder="Morada, código postal ou clica no mapa…" autocomplete="off" spellcheck="false">
-    <button class="s-btn s-gps" onclick="useGPS()" title="GPS">📍</button>
-    <button class="s-btn s-go" onclick="doSearch()">Verificar →</button>
-    <div id="sugg"></div>
-  </div>
-
-  <!-- MAIN -->
-  <div id="main">
-
-    <!-- MAP -->
-    <div id="map-wrap">
-      <div id="map"></div>
-      <div id="map-status"></div>
-    </div>
-
-    <!-- PANEL -->
-    <div id="panel">
-      <div id="panel-handle" onclick="togglePanel()"><div class="handle-bar"></div></div>
-
-      <div id="empty">
-        <div class="e-icon">📡</div>
-        <div class="e-title">Verificar Cobertura</div>
-        <div class="e-sub">Pesquisa uma morada, código postal, ou clica em qualquer ponto do mapa.</div>
-      </div>
-
-      <div id="pld">
-        <div class="pring"></div>
-        <div class="ptxt" id="pld-txt">A consultar<br>GEO.ANACOM…</div>
-      </div>
-
-      <div id="results"></div>
-
-      <div id="tabs">
-        <button class="tab act" onclick="switchTab('fixa',this)">📡 Fixa</button>
-        <button class="tab" onclick="switchTab('movel',this)">📱 Móvel</button>
-        <button class="tab" onclick="switchTab('sat',this)">🛰️ Satélite</button>
+<div id="top">
+  <a class="brand" href="https://solucoesdiferentes.vercel.app" target="_blank">
+    <div class="bi">💡</div>
+    <div><div class="bn">Soluções<span>Diferentes</span></div><div class="bs">Energia · Telecom · Seguros</div></div>
+  </a>
+  <div class="sep"></div>
+  <div class="ttl">📡 Cobertura de Rede</div>
+  <a class="pw" href="https://mypoupar.pt" target="_blank">
+    <div class="pd">M</div>
+    <div class="pt">powered by<br><b>MyPoupar</b></div>
+  </a>
+</div>
+<div id="srch">
+  <input id="inp" type="text" placeholder="Morada ou código postal (ex: 4445-301)…" autocomplete="off" spellcheck="false">
+  <button id="gps" onclick="useGPS()">📍</button>
+  <button id="go" onclick="doSearch()">Verificar →</button>
+  <div id="sugg"></div>
+</div>
+<div id="main">
+  <div id="map"></div>
+  <div id="panel">
+    <div id="hnd" onclick="document.getElementById('panel').classList.toggle('up')"><div class="hb"></div></div>
+    <div id="empty">
+      <div class="ei">📡</div>
+      <div class="et">Verificar Cobertura</div>
+      <div class="es">Pesquisa uma morada, código postal ou clica no mapa.</div>
+      <div class="chips">
+        <button class="ch" onclick="q('Porto centro')">Porto</button>
+        <button class="ch" onclick="q('Lisboa centro')">Lisboa</button>
+        <button class="ch" onclick="q('Braga centro')">Braga</button>
+        <button class="ch" onclick="q('Faro centro')">Faro</button>
+        <button class="ch" onclick="q('4710-301')">4710-301</button>
       </div>
     </div>
+    <div id="ld"><div class="ring"></div><div class="lt" id="lt">A consultar<br>GEO.ANACOM…</div></div>
+    <div id="res"></div>
   </div>
 </div>
-
 <script>
-// ── ESTADO ────────────────────────────────────────────────────────
-let map, marker, pulseCircle;
-let clat=null, clon=null, sugTO=null, coverage={fixa:[],movel:[],sat:[]};
-let activeTab='fixa', panelOpen=false;
-const ANACOM='https://geo.anacom.pt/server/rest/services/publico/Coberturas_Disponiveis/MapServer';
-
-// ── MAPA ──────────────────────────────────────────────────────────
-map = L.map('map',{center:[39.7,-8.1],zoom:7,zoomControl:true,attributionControl:false});
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-  {subdomains:'abcd',maxZoom:20}).addTo(map);
-L.control.attribution({prefix:'© CartoDB · © OSM · ANACOM'}).addTo(map);
-
-map.on('click', async e => {
-  const {lat,lng} = e.latlng;
-  await lookup(lat, lng, null);
-});
-
-// ── MARKER ────────────────────────────────────────────────────────
-function placeMarker(lat,lon) {
-  if(marker) map.removeLayer(marker);
-  if(pulseCircle) map.removeLayer(pulseCircle);
-  pulseCircle = L.circle([lat,lon],{radius:60,color:'#10b981',fillColor:'#10b981',fillOpacity:.08,weight:1}).addTo(map);
-  const icon = L.divIcon({
-    html:`<div style="width:16px;height:16px;border-radius:50%;background:#0d1117;border:2px solid #10b981;box-shadow:0 0 10px #10b98180"></div>`,
-    iconSize:[16,16],iconAnchor:[8,8],className:''
+var map=L.map('map',{center:[39.7,-8.1],zoom:7});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:20,attribution:'© CartoDB © OSM © ANACOM'}).addTo(map);
+map.on('click',function(e){lk(e.latlng.lat,e.latlng.lng,null)});
+var MK=null,CI=null;
+function pm(la,lo){
+  if(MK)map.removeLayer(MK);if(CI)map.removeLayer(CI);
+  CI=L.circle([la,lo],{radius:60,color:'#10b981',fillColor:'#10b981',fillOpacity:.08,weight:1}).addTo(map);
+  var ic=L.divIcon({html:'<div style="width:16px;height:16px;border-radius:50%;background:#0d1117;border:2px solid #10b981;box-shadow:0 0 12px #10b98180"></div>',iconSize:[16,16],iconAnchor:[8,8],className:''});
+  MK=L.marker([la,lo],{icon:ic}).addTo(map);
+  map.flyTo([la,lo],15,{duration:.8});
+}
+var AB='https://geo.anacom.pt/server/rest/services/publico/Coberturas_Disponiveis/MapServer';
+var VZ={0:'—',1:'Limitada',2:'Aceitável',3:'Boa',4:'Muito Boa'};
+var V3={0:0,1:1,2:7,14:18,21:21};
+var V4={0:0,10:10,30:30,50:50,100:100,150:150,300:300,600:600,1000:1000};
+var V5={0:0,50:50,100:100,300:300,600:600,1000:1000,2000:2000};
+var OC={48:'MEO',52:'NOS',53:'NOS Madeira',81:'Vodafone',21:'DIGI',55:'NOWO',69:'Starlink'};
+var MO=[{id:5,n:'MEO'},{id:6,n:'NOS'},{id:7,n:'Vodafone'},{id:8,n:'DIGI'}];
+function aq(l,p){
+  var u=new URLSearchParams(Object.assign({},p,{f:'json'}));
+  return fetch(AB+'/'+l+'/query?'+u).then(function(r){return r.ok?r.json():null}).catch(function(){return null});
+}
+function qA(la,lo){
+  var g=JSON.stringify({x:lo,y:la,spatialReference:{wkid:4326}});
+  var b={geometry:g,geometryType:'esriGeometryPoint',inSR:'4326',spatialRel:'esriSpatialRelIntersects',returnGeometry:'false'};
+  return Promise.all([
+    aq(3,Object.assign({},b,{outFields:'id_quad'})),
+    aq(2,Object.assign({},b,{outFields:'operador,operador_alias,vel_dl_sat,vel_ul_sat,estado'})),
+    aq(0,Object.assign({},b,{outFields:'edif_cod',distance:150,units:'esriSRUnit_Meter'}))
+  ]).then(function(r){
+    var gR=r[0],sR=r[1],bR=r[2];
+    var iQ=gR&&gR.features&&gR.features[0]?gR.features[0].attributes.id_quad:null;
+    var ec=(bR&&bR.features?bR.features:[]).map(function(f){return f.attributes.edif_cod}).filter(Boolean);
+    var mP=iQ?Promise.all(MO.map(function(op){return aq(op.id,{where:"id_quad='"+iQ+"'",outFields:'id_quad,voz_ms_2g,voz_ms_3g,vel_dl_3g,vel_dl_4g,vel_dl_5g'})})):Promise.resolve(null);
+    var fP=ec.length?aq(1,{where:'edif_cod IN ('+ec.slice(0,6).map(function(c){return"'"+c+"'"}).join(',')+')',outFields:'*'}):Promise.resolve(null);
+    return Promise.all([mP,fP]).then(function(r2){
+      var mR=r2[0],fR=r2[1];
+      var movel=[];
+      if(mR)MO.forEach(function(op,i){
+        var f=mR[i]&&mR[i].features&&mR[i].features[0]?mR[i].features[0].attributes:null;
+        if(!f)return;
+        var sv=[],v2=parseInt(f.voz_ms_2g)||0,v3=parseInt(f.voz_ms_3g)||0;
+        var d3=V3[parseInt(f.vel_dl_3g)]||0,d4=V4[parseInt(f.vel_dl_4g)]||parseInt(f.vel_dl_4g)||0,d5=V5[parseInt(f.vel_dl_5g)]||parseInt(f.vel_dl_5g)||0;
+        if(v2>0)sv.push({tech:'2G',disponivel:true,qualidade:VZ[v2]});
+        if(v3>0||d3>0)sv.push({tech:'3G',disponivel:true,vel_dl:d3||7,qualidade:'Disponível'});
+        if(d4>0)sv.push({tech:'4G',disponivel:true,vel_dl:d4,qualidade:d4>=150?'Muito Boa':d4>=50?'Boa':'Aceitável'});
+        if(d5>0)sv.push({tech:'5G',disponivel:true,vel_dl:d5,qualidade:'Boa'});
+        if(sv.length)movel.push({operador:op.n,servicos:sv});
+      });
+      var byO={};
+      if(fR&&fR.features)fR.features.forEach(function(f){
+        var a=f.attributes,nm=a.operador_alias||OC[parseInt(a.operador)]||('Op.'+a.operador),dl=parseInt(a.vel_dl)||0;
+        if(!byO[nm]||dl>byO[nm].vel_dl)byO[nm]={operador:nm,tecnologia:a.tecnologia||a.tipo_tecnologia||'',vel_dl:dl,vel_ul:parseInt(a.vel_ul)||0};
+      });
+      var fixa=Object.values(byO);
+      var sat=[];
+      if(sR&&sR.features)sR.features.forEach(function(f){
+        var a=f.attributes;if(a.estado&&a.estado!==1)return;
+        var dl=parseInt(a.vel_dl_sat)||0;
+        if(dl>0)sat.push({operador:a.operador_alias||OC[parseInt(a.operador)]||'Satélite',vel_dl:dl,vel_ul:parseInt(a.vel_ul_sat)||0});
+      });
+      var src=(fixa.length||movel.length||sat.length)?'geo.anacom.pt':'estimativa';
+      if(src==='estimativa')return Object.assign(fb(la,lo),{source:'estimativa'});
+      return{fixa:fixa,movel:movel,sat:sat,source:'geo.anacom.pt'};
+    });
   });
-  marker = L.marker([lat,lon],{icon}).addTo(map);
-  map.flyTo([lat,lon],15,{duration:.8});
 }
-
-// ── STATUS ────────────────────────────────────────────────────────
-function setStatus(txt) {
-  const el=document.getElementById('map-status');
-  if(txt){el.textContent=txt;el.style.display='block'}
-  else{el.style.display='none'}
+function fb(la,lo){
+  var h=Math.abs(Math.round((la*7919+lo*6271)%100));
+  var u=[[38.717,-9.139,.25],[41.149,-8.611,.14],[41.545,-8.426,.07],[40.209,-8.424,.07],[40.641,-8.654,.06],[38.524,-8.893,.06],[37.020,-7.931,.06],[41.183,-8.696,.07],[41.128,-8.612,.08]].some(function(c){return Math.hypot(la-c[0],lo-c[1])<c[2]});
+  var fi=[];
+  if(u?h<94:h<68)fi.push({operador:'NOS',tecnologia:'FTTH',vel_dl:[1000,2000,10000][h%3],vel_ul:[500,1000,10000][h%3]});
+  else if(h<85)fi.push({operador:'NOS',tecnologia:'HFC',vel_dl:[200,500][h%2],vel_ul:[20,50][h%2]});
+  if(u?h<96:h<71)fi.push({operador:'MEO',tecnologia:'FTTH',vel_dl:[1000,2000,10000][(h+1)%3],vel_ul:[500,1000,10000][(h+1)%3]});
+  else fi.push({operador:'MEO',tecnologia:h<60?'HFC':'ADSL',vel_dl:h<60?300:24,vel_ul:h<60?30:5});
+  if(u?h<88:h<55)fi.push({operador:'Vodafone',tecnologia:'FTTH',vel_dl:[1000,2000][(h+2)%2],vel_ul:[500,1000][(h+2)%2]});
+  if(u&&(la>40.8||(la>38.5&&la<39.2))&&h<70)fi.push({operador:'DIGI',tecnologia:'FTTH',vel_dl:[1000,2500][h%2],vel_ul:[500,1000][h%2]});
+  var mo=['MEO','NOS','Vodafone'].map(function(op,i){return{operador:op,servicos:[{tech:'5G',disponivel:u||h<60,vel_dl:1500-i*100,qualidade:u?'Muito Boa':'Boa'},{tech:'4G',disponivel:h<97,vel_dl:150,qualidade:'Boa'},{tech:'3G',disponivel:true,vel_dl:21,qualidade:'Disponível'}]}});
+  return{fixa:fi,movel:mo,sat:[{operador:'Starlink',vel_dl:220,vel_ul:25}]};
 }
-
-// ── ANACOM QUERIES ────────────────────────────────────────────────
-// CORS é aberto nos endpoints REST ArcGIS do ANACOM
-const VOZ={0:'—',1:'Limitada',2:'Aceitável',3:'Boa',4:'Muito Boa'};
-const V3G={0:0,1:1,2:7,14:18,21:21};
-const V4G={0:0,10:10,30:30,50:50,100:100,150:150,300:300,600:600,1000:1000};
-const V5G={0:0,50:50,100:100,300:300,600:600,1000:1000,2000:2000};
-const OPS={48:'MEO',52:'NOS',53:'NOS Madeira',81:'Vodafone',21:'DIGI',55:'NOWO',69:'Starlink'};
-const MOV=[{id:5,n:'MEO'},{id:6,n:'NOS'},{id:7,n:'Vodafone'},{id:8,n:'DIGI'}];
-
-async function aq(layer, params, ms=8000) {
-  const p=new URLSearchParams({...params,f:'json'});
-  try{
-    const r=await fetch(`${ANACOM}/${layer}/query?${p}`,{signal:AbortSignal.timeout(ms)});
-    if(!r.ok) return null;
-    return await r.json();
-  }catch(e){console.warn(`L${layer}:`,e.message);return null}
-}
-
-async function queryANACOM(lat,lon) {
-  const geo=JSON.stringify({x:lon,y:lat,spatialReference:{wkid:4326}});
-  const base={geometry:geo,geometryType:'esriGeometryPoint',inSR:'4326',
-               spatialRel:'esriSpatialRelIntersects',returnGeometry:'false'};
-
-  setStatus('🔄 A consultar GEO.ANACOM…');
-
-  // Paralelo: móvel grid + satélite + edifícios (mais rápido)
-  const [gridR, satR, bldR] = await Promise.all([
-    aq(3,{...base,outFields:'id_quad'}),
-    aq(2,{...base,outFields:'operador,operador_alias,vel_dl_sat,vel_ul_sat,estado'}),
-    aq(0,{...base,outFields:'edif_cod',distance:100,units:'esriSRUnit_Meter'})
-  ]);
-
-  const idQuad = gridR?.features?.[0]?.attributes?.id_quad || null;
-  let edifCods = (bldR?.features||[]).map(f=>f.attributes.edif_cod).filter(Boolean);
-
-  // Se sem edifícios próximos, ampliar para 300m
-  let bldR2=null;
-  if(!edifCods.length){
-    bldR2 = await aq(0,{...base,outFields:'edif_cod',distance:300,units:'esriSRUnit_Meter'});
-    edifCods=(bldR2?.features||[]).map(f=>f.attributes.edif_cod).filter(Boolean);
-  }
-
-  // Paralelo: tabelas móvel + tabela fixa
-  const [movelResults, fixaR] = await Promise.all([
-    idQuad ? Promise.allSettled(MOV.map(op=>aq(op.id,{
-      where:`id_quad='${idQuad}'`,
-      outFields:'id_quad,voz_ms_2g,voz_ms_3g,vel_dl_3g,vel_dl_4g,vel_dl_5g'
-    }))) : Promise.resolve(null),
-    edifCods.length ? aq(1,{where:`edif_cod IN (${edifCods.slice(0,6).map(c=>`'${c}'`).join(',')})`,outFields:'*'}) : Promise.resolve(null)
-  ]);
-
-  // Parse rede móvel
-  const movel = !movelResults ? [] : MOV.map((op,i)=>{
-    const f=movelResults[i]?.value?.features?.[0]?.attributes;
-    if(!f) return null;
-    const svs=[];
-    const v2=+f.voz_ms_2g||0,v3=+f.voz_ms_3g||0;
-    const d3=V3G[+f.vel_dl_3g]||0,d4=V4G[+f.vel_dl_4g]||+f.vel_dl_4g||0,d5=V5G[+f.vel_dl_5g]||+f.vel_dl_5g||0;
-    if(v2>0)svs.push({tech:'2G',disponivel:true,qualidade:VOZ[v2],tipo:'voz'});
-    if(v3>0||d3>0)svs.push({tech:'3G',disponivel:true,vel_dl:d3||7,qualidade:d3>=21?'Boa':'Aceitável'});
-    if(d4>0)svs.push({tech:'4G',disponivel:true,vel_dl:d4,qualidade:d4>=150?'Muito Boa':d4>=50?'Boa':'Aceitável'});
-    if(d5>0)svs.push({tech:'5G',disponivel:true,vel_dl:d5,qualidade:'Boa'});
-    return svs.length?{operador:op.n,servicos:svs}:null;
-  }).filter(Boolean);
-
-  // Parse rede fixa
-  const byOp={};
-  (fixaR?.features||[]).forEach(({attributes:a})=>{
-    const nm=a.operador_alias||OPS[+a.operador]||`Op.${a.operador}`;
-    const dl=+a.vel_dl||0;
-    if(!byOp[nm]||dl>byOp[nm].vel_dl){
-      byOp[nm]={operador:nm,tecnologia:a.tecnologia||a.tipo_tecnologia||'',
-                vel_dl:dl,vel_ul:+a.vel_ul||0,
-                servicos:dl?['Internet','TV','Voz']:['Internet']};
-    }
-  });
-  const fixa=Object.values(byOp);
-
-  // Parse satélite
-  const sat=(satR?.features||[])
-    .filter(f=>!f.attributes.estado||f.attributes.estado===1)
-    .map(f=>{const a=f.attributes;return{
-      operador:a.operador_alias||OPS[+a.operador]||'Satélite',
-      tecnologia:'Satélite',vel_dl:+a.vel_dl_sat||0,vel_ul:+a.vel_ul_sat||0
-    }}).filter(s=>s.vel_dl>0);
-
-  setStatus(null);
-  const src = fixa.length||movel.length||sat.length ? 'geo.anacom.pt' : 'estimativa';
-  document.getElementById('src-label').textContent = src==='geo.anacom.pt' ? 'GEO.ANACOM' : 'Estimativa';
-
-  if(src==='estimativa'){
-    return {...smartFallback(lat,lon), source:'estimativa'};
-  }
-  return {fixa,movel,sat,source:'geo.anacom.pt',idQuad};
-}
-
-// ── FALLBACK INTELIGENTE ──────────────────────────────────────────
-function smartFallback(lat,lon){
-  const h=Math.abs(Math.round((lat*7919+lon*6271))%100);
-  const urb=[[38.717,-9.139,.25],[41.149,-8.611,.14],[41.545,-8.426,.07],
-             [40.209,-8.424,.07],[40.641,-8.654,.06],[38.524,-8.893,.06],
-             [37.020,-7.931,.06],[40.659,-7.913,.05],[41.183,-8.696,.07],
-             [41.128,-8.612,.08],[41.445,-8.298,.06]].some(([lt,ln,r])=>Math.hypot(lat-lt,lon-ln)<r);
-
-  const fNOS=urb?h<94:h<68,fMEO=urb?h<96:h<71,fVODA=urb?h<88:h<55,fDIGI=urb&&(lat>40.8||lat<39.2)?h<70:h<15;
-  const fixa=[];
-  if(fNOS) fixa.push({operador:'NOS',tecnologia:'FTTH',vel_dl:[1000,2000,10000][h%3],vel_ul:[500,1000,10000][h%3],servicos:['Internet','TV','Voz','Móvel']});
-  else if(h<85) fixa.push({operador:'NOS',tecnologia:'HFC',vel_dl:[200,500][h%2],vel_ul:[20,50][h%2],servicos:['Internet','TV','Voz']});
-  if(fMEO) fixa.push({operador:'MEO',tecnologia:'FTTH',vel_dl:[1000,2000,10000][(h+1)%3],vel_ul:[500,1000,10000][(h+1)%3],servicos:['Internet','TV','Voz','Móvel']});
-  else fixa.push({operador:'MEO',tecnologia:h<60?'HFC':'ADSL',vel_dl:h<60?300:24,vel_ul:h<60?30:5,servicos:['Internet','Voz']});
-  if(fVODA) fixa.push({operador:'Vodafone',tecnologia:'FTTH',vel_dl:[1000,2000][(h+2)%2],vel_ul:[500,1000][(h+2)%2],servicos:['Internet','TV','Voz','Móvel']});
-  if(fDIGI) fixa.push({operador:'DIGI',tecnologia:'FTTH',vel_dl:[1000,2500][h%2],vel_ul:[500,1000][h%2],servicos:['Internet','TV','Voz']});
-
-  const movel=['MEO','NOS','Vodafone'].map((op,i)=>({operador:op,servicos:[
-    {tech:'5G',disponivel:urb||h<60,vel_dl:1500-i*100,qualidade:urb?'Muito Boa':'Boa'},
-    {tech:'4G',disponivel:h<97,vel_dl:150,qualidade:'Boa'},
-    {tech:'3G',disponivel:true,vel_dl:21,qualidade:'Disponível'},
-  ]}));
-  const sat=[{operador:'Starlink',tecnologia:'Satélite',vel_dl:220,vel_ul:25}];
-  return {fixa,movel,sat};
-}
-
-// ── LOOKUP PRINCIPAL ──────────────────────────────────────────────
-async function lookup(lat, lon, addr) {
-  clat=lat; clon=lon;
-  placeMarker(lat,lon);
-
-  // Mostrar loading
+var CL=null,CO=null;
+function lk(la,lo,ad){
+  CL=la;CO=lo;pm(la,lo);
   document.getElementById('empty').style.display='none';
-  document.getElementById('pld').style.display='flex';
-  document.getElementById('results').style.display='none';
-  if(window.innerWidth<=700){
-    document.getElementById('panel').classList.add('open');
-    panelOpen=true;
-  }
-
-  // Geocode reverso rápido se sem endereço
-  let displayAddr = addr;
-  if(!displayAddr){
-    try{
-      const r=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json&accept-language=pt`,
-        {headers:{'User-Agent':'SolucoesDiferentes/1.0'},signal:AbortSignal.timeout(4000)});
-      const d=await r.json();
-      displayAddr=(d.address?.road||'')+(d.address?.house_number?' '+d.address.house_number:'')||d.display_name?.split(',')[0]||`${lat.toFixed(4)}, ${lon.toFixed(4)}`;
-    }catch{ displayAddr=`${lat.toFixed(5)}, ${lon.toFixed(5)}`; }
-  }
-
-  // Consultar ANACOM
-  let data;
-  try{ data=await queryANACOM(lat,lon); }
-  catch(e){ console.error(e); data={...smartFallback(lat,lon),source:'estimativa'}; }
-
-  coverage=data;
-  document.getElementById('pld').style.display='none';
-  document.getElementById('results').style.display='block';
-  renderResults(displayAddr, lat, lon, data);
-}
-
-// ── RENDER ────────────────────────────────────────────────────────
-function renderResults(addr, lat, lon, data) {
-  const maxDl=Math.max(...(data.fixa||[]).map(f=>f.vel_dl||0),0);
-  const has5g=(data.movel||[]).some(m=>m.servicos?.some(s=>s.tech==='5G'&&s.disponivel));
-  const hasFTTH=(data.fixa||[]).some(f=>f.tecnologia?.includes('FTTH'));
-  const score=Math.min(100,
-    (data.fixa?.length||0)*15+(data.movel?.length||0)*10+(has5g?15:0)+(hasFTTH?20:0)+
-    Math.min(20,Math.round((maxDl/500)))+((data.sat?.length||0)*2));
-  const scoreColor=score>=80?'var(--green)':score>=50?'var(--amber)':'var(--red)';
-
-  const srcBadge=data.source==='geo.anacom.pt'
-    ?'<span style="color:var(--green)">● GEO.ANACOM oficial</span>'
-    :'<span style="color:var(--amber)">◐ Estimativa de mercado</span>';
-
-  let html=`
-  <div class="r-loc">
-    <div class="r-addr" title="${addr}">${addr}</div>
-    <div class="r-coord">${lat.toFixed(6)}°N  ${Math.abs(lon).toFixed(6)}°W</div>
-    <div class="r-src" style="font-size:10px;margin-top:3px">${srcBadge}</div>
-  </div>`;
-
-  // Score
-  html+=`<div class="score-box">
-    <div class="score-row">
-      <div class="score-num" style="color:${scoreColor}">${score}</div>
-      <div class="score-bar-wrap">
-        <div class="score-lbl" style="color:${scoreColor}">${score>=80?'Excelente':score>=50?'Razoável':'Limitada'}</div>
-        <div class="score-bar"><div class="score-fill" style="width:${score}%;background:${scoreColor}"></div></div>
-      </div>
-    </div>
-    <div style="display:flex;gap:6px;font-size:10px;color:var(--tm);flex-wrap:wrap">
-      ${hasFTTH?'<span style="color:var(--green)">✓ FTTH</span>':''}
-      ${has5g?'<span style="color:#a78bfa">✓ 5G</span>':''}
-      <span>${(data.fixa?.length||0)} operadoras fixas</span>
-      <span>·</span>
-      <span>${(data.movel?.length||0)} operadoras móveis</span>
-    </div>
-  </div>`;
-
-  // Rede Fixa
-  html+=`<div class="sec">Rede Fixa<div class="sec-line"></div><span class="sec-count">${data.fixa?.length||0}</span></div>`;
-  if(!data.fixa?.length){
-    html+=`<div class="nodata">Sem dados de rede fixa para este edifício exacto.<br><a href="https://geo.anacom.pt/publico/home?lat=${lat}&lon=${lon}&zoom=17" target="_blank">Ver no GEO.ANACOM →</a></div>`;
-  } else {
-    data.fixa.forEach((f,i)=>{
-      const op=f.operador.toLowerCase();
-      const cls=op.includes('meo')?'logo-meo':op.includes('nos')?'logo-nos':op.includes('voda')?'logo-voda':op.includes('digi')?'logo-digi':'logo-other';
-      const letter=f.operador[0];
-      const tec=(f.tecnologia||'').toUpperCase();
-      const tagCls=tec.includes('FTTH')||tec.includes('FTTB')?'tag-ftth':tec.includes('HFC')?'tag-hfc':'tag-adsl';
-      const pct=maxDl>0?Math.round((f.vel_dl/maxDl)*100):0;
-      html+=`<div class="op cov" id="op-${i}" onclick="toggleOp(${i})">
-        <div class="op-hd">
-          <div class="op-logo ${cls}">${letter}</div>
-          <div class="op-info">
-            <div class="op-name">${f.operador}</div>
-            <div class="op-tags">
-              ${tec?`<span class="tag ${tagCls}">${tec}</span>`:''}
-              ${(f.servicos||[]).slice(0,2).map(s=>`<span class="tag tag-adsl" style="font-size:8px">${s}</span>`).join('')}
-            </div>
-          </div>
-          ${f.vel_dl>0?`<div class="op-speed">${f.vel_dl>=1000?f.vel_dl/1000+'G':f.vel_dl+'M'}</div>`:''}
-        </div>
-        <div class="op-body">
-          <div class="sp-grid">
-            <div class="sp-cell">
-              <div class="sp-val">${f.vel_dl>=1000?(f.vel_dl/1000).toFixed(1)+'<span class="sp-unit">Gbps</span>':f.vel_dl+'<span class="sp-unit">Mbps</span>'}</div>
-              <div class="sp-lbl">Download máx.</div>
-              <div class="sp-bar"><div class="sp-fill fill-dl" style="width:${pct}%"></div></div>
-            </div>
-            <div class="sp-cell">
-              <div class="sp-val">${f.vel_ul>=1000?(f.vel_ul/1000).toFixed(1)+'<span class="sp-unit">Gbps</span>':f.vel_ul+'<span class="sp-unit">Mbps</span>'}</div>
-              <div class="sp-lbl">Upload máx.</div>
-              <div class="sp-bar"><div class="sp-fill fill-ul" style="width:${Math.round((f.vel_ul/f.vel_dl)*pct||pct*0.5)}%"></div></div>
-            </div>
-          </div>
-          <div class="op-actions">
-            <a href="https://www.${op.includes('meo')?'meo':op.includes('nos')?'nos':op.includes('voda')?'vodafone':'digi'}.pt" target="_blank" class="op-act">Ver ofertas →</a>
-          </div>
-        </div>
-      </div>`;
-    });
-  }
-
-  // Rede Móvel
-  html+=`<div class="sec">Rede Móvel<div class="sec-line"></div><span class="sec-count">${data.movel?.length||0}</span></div>`;
-  (data.movel||[]).forEach((m,i)=>{
-    const op=m.operador.toLowerCase();
-    const cls=op.includes('meo')?'logo-meo':op.includes('nos')?'logo-nos':op.includes('voda')?'logo-voda':op.includes('digi')?'logo-digi':'logo-other';
-    const best=m.servicos?.find(s=>s.disponivel&&s.vel_dl)?.[Symbol.iterator]?.()?.next?.()?.value;
-    const bestSvc=m.servicos?.filter(s=>s.disponivel&&s.vel_dl).sort((a,b)=>(b.vel_dl||0)-(a.vel_dl||0))[0];
-    const ii=i+100;
-    html+=`<div class="op cov" id="op-${ii}" onclick="toggleOp(${ii})">
-      <div class="op-hd">
-        <div class="op-logo ${cls}">${m.operador[0]}</div>
-        <div class="op-info">
-          <div class="op-name">${m.operador}</div>
-          <div class="op-tags">
-            ${(m.servicos||[]).filter(s=>s.disponivel).map(s=>{
-              const tc=s.tech==='5G'?'tag-5g':s.tech==='4G'?'tag-4g':'tag-3g';
-              return `<span class="tag ${tc}">${s.tech}</span>`;
-            }).join('')}
-          </div>
-        </div>
-        ${bestSvc?`<div class="op-speed">${bestSvc.vel_dl}M</div>`:''}
-      </div>
-      <div class="op-body">
-        <div class="mob-grid">
-          ${(m.servicos||[]).map(s=>{
-            const tc=s.tech==='5G'?'#a78bfa':s.tech==='4G'?'#60a5fa':'#9ca3af';
-            return `<div class="mob-cell">
-              <div class="mob-tech" style="color:${s.disponivel?tc:'var(--ts)'}">${s.tech}</div>
-              ${s.vel_dl?`<div class="mob-val">${s.vel_dl}M</div>`:''}
-              ${s.qualidade?`<div class="mob-val" style="font-size:8px">${s.qualidade}</div>`:''}
-              <div class="mob-avail ${s.disponivel?'av-y':'av-n'}">${s.disponivel?'✓ Sim':'✗ N/D'}</div>
-            </div>`;
-          }).join('')}
-        </div>
-      </div>
-    </div>`;
+  document.getElementById('ld').style.display='flex';
+  document.getElementById('res').style.display='none';
+  if(window.innerWidth<=680)document.getElementById('panel').classList.add('up');
+  var aP=ad?Promise.resolve(ad):fetch('https://nominatim.openstreetmap.org/reverse?lat='+la+'&lon='+lo+'&format=json&accept-language=pt',{headers:{'User-Agent':'SolucoesDiferentes/1.0'}}).then(function(r){return r.json()}).then(function(d){return(d.address&&d.address.road?(d.address.road+(d.address.house_number?' '+d.address.house_number:'')):(d.display_name||'').split(',')[0])||la.toFixed(4)+', '+lo.toFixed(4)}).catch(function(){return la.toFixed(5)+', '+lo.toFixed(5)});
+  var dP=qA(la,lo).catch(function(){return Object.assign(fb(la,lo),{source:'estimativa'})});
+  Promise.all([aP,dP]).then(function(r){
+    document.getElementById('ld').style.display='none';
+    document.getElementById('res').style.display='block';
+    rR(r[0],la,lo,r[1]);
+  }).catch(function(){
+    var d=Object.assign(fb(la,lo),{source:'estimativa'});
+    document.getElementById('ld').style.display='none';
+    document.getElementById('res').style.display='block';
+    rR(la.toFixed(5)+', '+lo.toFixed(5),la,lo,d);
   });
-
-  // Satélite
-  if(data.sat?.length){
-    html+=`<div class="sec">Satélite<div class="sec-line"></div><span class="sec-count">${data.sat.length}</span></div>`;
-    data.sat.forEach((s,i)=>{
-      const ii=i+200;
-      html+=`<div class="op" id="op-${ii}" onclick="toggleOp(${ii})">
-        <div class="op-hd">
-          <div class="op-logo logo-sat">★</div>
-          <div class="op-info">
-            <div class="op-name">${s.operador}</div>
-            <div class="op-tags"><span class="tag tag-sat">LEO SAT</span></div>
-          </div>
-          ${s.vel_dl?`<div class="op-speed">${s.vel_dl}M</div>`:''}
-        </div>
-        <div class="op-body">
-          <div class="sp-grid">
-            <div class="sp-cell"><div class="sp-val">${s.vel_dl}<span class="sp-unit">Mbps</span></div><div class="sp-lbl">Download</div></div>
-            <div class="sp-cell"><div class="sp-val">${s.vel_ul}<span class="sp-unit">Mbps</span></div><div class="sp-lbl">Upload</div></div>
-          </div>
-          <div style="font-size:10px;color:var(--tm);margin-top:8px">Latência: 25–60ms · Cobertura nacional</div>
-        </div>
-      </div>`;
-    });
+}
+function rR(ad,la,lo,d){
+  var fi=d.fixa||[],mo=d.movel||[],sa=d.sat||[];
+  var mx=0;fi.forEach(function(f){if(f.vel_dl>mx)mx=f.vel_dl});
+  var h5=mo.some(function(m){return m.servicos&&m.servicos.some(function(s){return s.tech==='5G'&&s.disponivel})});
+  var hF=fi.some(function(f){return f.tecnologia&&f.tecnologia.includes('FTTH')});
+  var sc=Math.min(100,fi.length*15+mo.length*10+(h5?15:0)+(hF?20:0)+Math.min(20,Math.round(mx/500))+sa.length*2);
+  var cc=sc>=80?'#10b981':sc>=50?'#f59e0b':'#ef4444';
+  var sr=d.source==='geo.anacom.pt'?'<span style="color:#10b981">● GEO.ANACOM oficial</span>':'<span style="color:#f59e0b">◐ Estimativa PT</span>';
+  var h='<div class="rh"><div class="ra" title="'+ad+'">'+ad+'</div><div class="rc">'+la.toFixed(6)+'°N  '+Math.abs(lo).toFixed(6)+'°W</div><div class="rs">'+sr+'</div></div>';
+  h+='<div class="sc"><div class="sr"><div class="sn" style="color:'+cc+'">'+sc+'</div><div class="sw"><div class="sl" style="color:'+cc+'">'+(sc>=80?'Excelente':sc>=50?'Razoável':'Limitada')+'</div><div class="sb"><div class="sf" style="width:'+sc+'%;background:'+cc+'"></div></div></div></div><div class="st">'+(hF?'<span style="color:#10b981">✓ FTTH</span>':'')+(h5?'<span style="color:#a78bfa">✓ 5G</span>':'')+'<span>'+fi.length+' fixas · '+mo.length+' móveis</span></div></div>';
+  h+='<div class="sh">Rede Fixa<div class="shl"></div><span class="shn">'+fi.length+'</span></div>';
+  if(!fi.length){h+='<div class="nd">Sem dados fixos para este ponto exacto.<br><a href="https://geo.anacom.pt/publico/home?lat='+la+'&lon='+lo+'&zoom=17" target="_blank">Ver no GEO.ANACOM →</a></div>'}
+  else fi.forEach(function(f,i){
+    var op=f.operador.toLowerCase();
+    var bg=op.includes('meo')?'background:#00b0e020;color:#00c8ff;border:1px solid #00b0e040':op.includes('nos')?'background:#ff040420;color:#ff6080;border:1px solid #ff040440':op.includes('voda')?'background:#e6000020;color:#ff6060;border:1px solid #e6000040':op.includes('digi')?'background:#ff881020;color:#ffaa60;border:1px solid #ff881040':'background:#ffffff10;color:#8899bb;border:1px solid #374263';
+    var tc=(f.tecnologia||'').toUpperCase(),cl=tc.includes('FTTH')?'tf':tc.includes('HFC')?'th':'ta';
+    var pp=mx>0?Math.round(f.vel_dl/mx*100):0;
+    var sp=f.vel_dl>=1000?(f.vel_dl/1000).toFixed(1)+'G':f.vel_dl+'M';
+    var si=op.includes('meo')?'meo':op.includes('nos')?'nos':op.includes('voda')?'vodafone':op.includes('digi')?'digi':'';
+    h+='<div class="op has" id="o'+i+'" onclick="tg('+i+')"><div class="oh"><div class="ol" style="'+bg+'">'+f.operador[0]+'</div><div class="oi"><div class="on">'+f.operador+'</div><div class="ot">'+(tc?'<span class="tag '+cl+'">'+tc+'</span>':'')+'</div></div><div class="osp" style="color:#e8edf8">'+(f.vel_dl>0?sp:'')+'</div></div><div class="ob"><div class="sg"><div class="sc2"><div class="sv">'+(f.vel_dl>=1000?(f.vel_dl/1000).toFixed(1)+'<span class="su">Gbps</span>':f.vel_dl+'<span class="su">Mbps</span>')+'</div><div class="sl2">Download máx.</div><div class="sb2"><div class="sf2" style="width:'+pp+'%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div></div><div class="sc2"><div class="sv">'+(f.vel_ul>=1000?(f.vel_ul/1000).toFixed(1)+'<span class="su">Gbps</span>':f.vel_ul+'<span class="su">Mbps</span>')+'</div><div class="sl2">Upload máx.</div><div class="sb2"><div class="sf2" style="width:'+Math.round(pp*f.vel_ul/Math.max(f.vel_dl,1))+'%;background:linear-gradient(90deg,#1a56db,#60a5fa)"></div></div></div></div>'+(si?'<a href="https://www.'+si+'.pt" target="_blank" class="lnk">Ver ofertas em '+f.operador+'.pt →</a>':'')+'</div></div>';
+  });
+  h+='<div class="sh">Rede Móvel<div class="shl"></div><span class="shn">'+mo.length+'</span></div>';
+  mo.forEach(function(m,i){
+    var op=m.operador.toLowerCase();
+    var bg=op.includes('meo')?'background:#00b0e020;color:#00c8ff;border:1px solid #00b0e040':op.includes('nos')?'background:#ff040420;color:#ff6080;border:1px solid #ff040440':op.includes('voda')?'background:#e6000020;color:#ff6060;border:1px solid #e6000040':op.includes('digi')?'background:#ff881020;color:#ffaa60;border:1px solid #ff881040':'background:#ffffff10;color:#8899bb;border:1px solid #374263';
+    var bs=null;(m.servicos||[]).forEach(function(s){if(s.disponivel&&s.vel_dl&&(!bs||s.vel_dl>bs.vel_dl))bs=s});
+    var ii=i+100;
+    h+='<div class="op has" id="o'+ii+'" onclick="tg('+ii+')"><div class="oh"><div class="ol" style="'+bg+'">'+m.operador[0]+'</div><div class="oi"><div class="on">'+m.operador+'</div><div class="ot">';
+    (m.servicos||[]).forEach(function(s){if(s.disponivel)h+='<span class="tag '+(s.tech==='5G'?'t5':s.tech==='4G'?'t4':'t3')+'">'+s.tech+'</span>'});
+    h+='</div></div><div class="osp" style="color:#e8edf8">'+(bs?bs.vel_dl+'M':'')+'</div></div><div class="ob"><div class="mg">';
+    (m.servicos||[]).forEach(function(s){var tc=s.tech==='5G'?'#a78bfa':s.tech==='4G'?'#60a5fa':'#9ca3af';h+='<div class="mc"><div class="mt" style="color:'+(s.disponivel?tc:'#4a5680')+'">'+s.tech+'</div>'+(s.vel_dl?'<div class="mv">'+s.vel_dl+'M</div>':'')+(s.qualidade?'<div class="mv">'+s.qualidade+'</div>':'')+'<div class="ma '+(s.disponivel?'ay':'an')+'">'+(s.disponivel?'✓ Sim':'✗ N/D')+'</div></div>'});
+    h+='</div></div></div>';
+  });
+  if(sa.length){
+    h+='<div class="sh">Satélite<div class="shl"></div><span class="shn">'+sa.length+'</span></div>';
+    sa.forEach(function(s,i){var ii=i+200;h+='<div class="op" id="o'+ii+'" onclick="tg('+ii+')"><div class="oh"><div class="ol" style="background:#8b5cf620;color:#a78bfa;border:1px solid #8b5cf640">★</div><div class="oi"><div class="on">'+s.operador+'</div><div class="ot"><span class="tag t5">LEO SAT</span></div></div><div class="osp" style="color:#e8edf8">'+(s.vel_dl||0)+'M</div></div><div class="ob"><div class="sg"><div class="sc2"><div class="sv">'+s.vel_dl+'<span class="su">Mbps</span></div><div class="sl2">Download</div></div><div class="sc2"><div class="sv">'+s.vel_ul+'<span class="su">Mbps</span></div><div class="sl2">Upload</div></div></div><div style="font-size:11px;color:#8899bb;margin-top:8px">Latência: 25–60ms · Nacional</div></div></div>'});
   }
-
-  html+=`<div style="height:16px"></div>`;
-  document.getElementById('results').innerHTML=html;
+  h+='<div class="ep"></div>';
+  document.getElementById('res').innerHTML=h;
 }
-
-function toggleOp(i){
-  const el=document.getElementById(`op-${i}`);
-  el?.classList.toggle('open');
-}
-function switchTab(tab,btn){
-  activeTab=tab;
-  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('act'));
-  btn.classList.add('act');
-}
-function togglePanel(){
-  panelOpen=!panelOpen;
-  document.getElementById('panel').classList.toggle('open',panelOpen);
-}
-
-// ── SEARCH ────────────────────────────────────────────────────────
-async function doSearch(){
-  const q=document.getElementById('inp').value.trim();
+function tg(i){var e=document.getElementById('o'+i);if(e)e.classList.toggle('open')}
+var ST=null;
+function doSearch(){
+  var v=document.getElementById('inp').value.trim();
   document.getElementById('sugg').style.display='none';
-  if(!q) return;
-
-  // Código postal
-  const cp=q.match(/^(\d{4})[- ]?(\d{3})$/);
+  if(!v)return;
+  document.getElementById('lt').textContent='A localizar…';
+  document.getElementById('empty').style.display='none';
+  document.getElementById('ld').style.display='flex';
+  document.getElementById('res').style.display='none';
+  var cp=v.match(/^(\d{4})[- ]?(\d{3})$/);
   if(cp){
-    try{
-      const r=await fetch(`https://json.geoapi.pt/codigo_postal/${cp[1]}-${cp[2]}`);
-      if(r.ok){
-        const d=await r.json();
-        const lt=parseFloat(d.latitude||d.Latitude),ln=parseFloat(d.longitude||d.Longitude);
-        if(lt&&ln){
-          const addr=`${d.rua||d.Rua||''}, ${d.localidade||d.Localidade||''}, ${cp[1]}-${cp[2]}`.replace(/^, /,'');
-          await lookup(lt,ln,addr);return;
-        }
-      }
-    }catch{}
+    fetch('https://json.geoapi.pt/codigo_postal/'+cp[1]+'-'+cp[2]).then(function(r){return r.json()}).then(function(d){
+      var lt=parseFloat(d.latitude||d.Latitude),ln=parseFloat(d.longitude||d.Longitude);
+      if(lt&&ln){var a=[(d.rua||d.Rua||''),(d.localidade||d.Localidade||''),cp[1]+'-'+cp[2]].filter(Boolean).join(', ');lk(lt,ln,a)}
+      else nm(v);
+    }).catch(function(){nm(v)});
+    return;
   }
-
-  // Nominatim
-  try{
-    const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+' Portugal')}&format=json&limit=1&countrycodes=pt`,
-      {headers:{'User-Agent':'SolucoesDiferentes/1.0'}});
-    const res=await r.json();
-    if(res.length){
-      const addr=res[0].display_name.split(',').slice(0,3).join(',');
-      await lookup(parseFloat(res[0].lat),parseFloat(res[0].lon),addr);
-    }
-  }catch{}
+  nm(v);
 }
-
+function nm(v){
+  fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(v+' Portugal')+'&format=json&limit=1&countrycodes=pt',{headers:{'User-Agent':'SolucoesDiferentes/1.0'}}).then(function(r){return r.json()}).then(function(res){
+    if(res.length){var a=res[0].display_name.split(',').slice(0,3).join(',');lk(parseFloat(res[0].lat),parseFloat(res[0].lon),a)}
+    else{document.getElementById('ld').style.display='none';document.getElementById('empty').style.display='flex'}
+  }).catch(function(){document.getElementById('ld').style.display='none';document.getElementById('empty').style.display='flex'});
+}
+function q(v){document.getElementById('inp').value=v;doSearch()}
 function useGPS(){
   if(!navigator.geolocation)return;
-  const btn=document.querySelector('.s-gps');btn.textContent='⏳';
-  navigator.geolocation.getCurrentPosition(async p=>{
-    btn.textContent='📍';
-    document.getElementById('inp').value=`${p.coords.latitude.toFixed(5)}, ${p.coords.longitude.toFixed(5)}`;
-    await lookup(p.coords.latitude,p.coords.longitude,null);
-  },()=>{btn.textContent='📍'},{timeout:8000});
+  var b=document.getElementById('gps');b.textContent='⏳';
+  navigator.geolocation.getCurrentPosition(function(p){b.textContent='📍';document.getElementById('inp').value=p.coords.latitude.toFixed(5)+', '+p.coords.longitude.toFixed(5);lk(p.coords.latitude,p.coords.longitude,null)},function(){b.textContent='📍'},{timeout:8000});
 }
-
-// Autocomplete
 document.getElementById('inp').addEventListener('input',function(){
-  const q=this.value.trim();
-  if(q.length<3){document.getElementById('sugg').style.display='none';return}
-  clearTimeout(sugTO);
-  sugTO=setTimeout(async()=>{
-    try{
-      const r=await fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q+' Portugal')}&format=json&limit=4&countrycodes=pt`,
-        {headers:{'User-Agent':'SolucoesDiferentes/1.0'}});
-      const res=await r.json();
-      const box=document.getElementById('sugg');
-      if(!res.length){box.style.display='none';return}
-      box.innerHTML=res.map(r=>{
-        const p=r.display_name.split(',');
-        return`<div class="sg" onclick="pickSug(${r.lat},${r.lon},'${p[0].replace(/'/g,"\\'")}')"><div class="sg-m">${p[0]}</div><div class="sg-s">${p.slice(1,3).join(',')}</div></div>`;
-      }).join('');
-      box.style.display='block';
-    }catch{}
+  var v=this.value.trim();if(v.length<3){document.getElementById('sugg').style.display='none';return}
+  clearTimeout(ST);ST=setTimeout(function(){
+    fetch('https://nominatim.openstreetmap.org/search?q='+encodeURIComponent(v+' Portugal')+'&format=json&limit=4&countrycodes=pt',{headers:{'User-Agent':'SolucoesDiferentes/1.0'}}).then(function(r){return r.json()}).then(function(res){
+      var bx=document.getElementById('sugg');if(!res.length){bx.style.display='none';return}
+      bx.innerHTML=res.map(function(r){var p=r.display_name.split(',');return'<div class="si" onclick="ps('+r.lat+','+r.lon+',\''+p[0].replace(/'/g,"\\'")+'\')"><b>'+p[0]+'</b><small>'+p.slice(1,3).join(',')+'</small></div>'}).join('');
+      bx.style.display='block';
+    }).catch(function(){});
   },350);
 });
-async function pickSug(lt,ln,label){
-  document.getElementById('inp').value=label;
-  document.getElementById('sugg').style.display='none';
-  await lookup(parseFloat(lt),parseFloat(ln),label);
-}
-document.getElementById('inp').addEventListener('keydown',e=>{if(e.key==='Enter')doSearch()});
-document.addEventListener('click',e=>{if(!e.target.closest('#srch'))document.getElementById('sugg').style.display='none'});
+function ps(la,lo,lb){document.getElementById('inp').value=lb;document.getElementById('sugg').style.display='none';lk(parseFloat(la),parseFloat(lo),lb)}
+document.getElementById('inp').addEventListener('keydown',function(e){if(e.key==='Enter')doSearch()});
+document.addEventListener('click',function(e){if(!e.target.closest('#srch'))document.getElementById('sugg').style.display='none'});
 </script>
 </body>
 </html>
